@@ -1,39 +1,45 @@
 import { readlineInterface } from "../utils/readline";
-import Stack from "./Queue";
+import Queue from "./Queue";
+
+// Класс Задачи
 
 class Task {
     private res: number[];
-    private window: Stack<number>;
+    private window: Queue<number>;
     private resLength: number;
     private windowLength: number;
     private questionRes: number[];
 
     constructor() {
         this.init();
-        this.res = [];
-        this.resLength = 0;
-        this.windowLength = 0;
-        this.window = new Stack([]);
-        this.questionRes = [];
+        this.res = []; // входящий массив
+        this.resLength = 0; // длина входящего массива
+        this.windowLength = 0; // длина окна
+        this.window = new Queue([]); // окно (очередь)
+        this.questionRes = []; // массив максимумов
     }
+
+    // вычисление максимумов в O(N)
 
     calculateTask() {
-        this.window = new Stack(this.res.slice(0, this.windowLength));
-        this.questionRes.push(Math.max(...this.window.value));
+        this.window = new Queue(this.res.slice(0, this.windowLength)); // инициализация окна в первоначальное состояние
+        this.questionRes.push(Math.max(...this.window.value)); // добавление в массив максимумов
 
         for (let i = this.windowLength; i < this.resLength; i++) {
-            this.window.pop();
-            this.window.push(this.res[i]);
+            this.window.push(this.res[i]); // First Input
+            this.window.shift(); // First Output
 
-            this.questionRes.push(Math.max(...this.window.value));
+            this.questionRes.push(Math.max(...this.window.value)); // добавление в массив максимумов
         }
 
-        console.log(this.questionRes);
+        console.log(this.questionRes.join(" ")); // вывод результата
     }
+
+    // чтение данных
 
     readTask() {
         readlineInterface.question("", (length: string) => {
-            this.resLength = parseInt(length);
+            this.resLength = parseInt(length); // парсинг длины массивов
 
             if (isNaN(this.resLength) || this.resLength <= 0) {
                 console.log(
@@ -44,7 +50,7 @@ class Task {
             }
 
             readlineInterface.question("", input => {
-                const res = input.split(" ").map(Number);
+                const res = input.split(" ").map(Number); // парсинг входящего массива данных
 
                 if (res.length !== this.resLength || res.includes(NaN)) {
                     console.log(
@@ -56,7 +62,7 @@ class Task {
                     this.res = res;
 
                     readlineInterface.question("", windowLength => {
-                        this.windowLength = parseInt(windowLength);
+                        this.windowLength = parseInt(windowLength); // парсинг длины окна
 
                         if (
                             isNaN(this.windowLength) ||
@@ -69,13 +75,16 @@ class Task {
                             readlineInterface.close();
                             return;
                         }
-                        this.calculateTask();
+
+                        this.calculateTask(); // вычисление по задаче
                         readlineInterface.close();
                     });
                 }
             });
         });
     }
+
+    // инициализация задачи
 
     init() {
         this.readTask();

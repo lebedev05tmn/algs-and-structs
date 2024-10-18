@@ -9,53 +9,62 @@ class Task {
     private callbackQueue: (() => void)[];
     private countCommands: number;
 
+    // перечисление свойств
+
     constructor() {
-        this.init();
-        this.res = new Stack<number>([]);
-        this.resCountCommands = 0;
-        this.sum = 0;
-        this.callbackQueue = [];
-        this.countCommands = 0;
+        this.init(); // инициализация
+        this.res = new Stack<number>([]); // создание стэка
+        this.resCountCommands = 0; // итоговое количество команд
+        this.sum = 0; // сумма
+        this.callbackQueue = []; // очередь запросов
+        this.countCommands = 0; // текущее количество команд
     }
+
+
+    // метод прочтения команды
 
     readElement() {
         if (this.countCommands < this.resCountCommands) {
             readlineInterface.question("", element => {
-                this.parse(element);
-                this.countCommands++;
-                this.readElement();
+                this.parse(element); // парсинг команды
+                this.countCommands++; // увеличение количества команд
+                this.readElement(); // рекурсия
             });
         } else {
             while (this.callbackQueue.length > 0) {
-                (this.callbackQueue.shift() as () => void)();
+                (this.callbackQueue.shift() as () => void)(); // очистка очереди команд
             }
-            readlineInterface.close();
+            readlineInterface.close(); // закрытие интерфейса readline
         }
     }
 
+    // парсинг команды
+
     parse(command: string) {
-        const [operation, value] = command.split(" ");
+        const [operation, value] = command.split(" "); // деструктуризация команды
 
         switch (operation) {
-            case Operations.PUSH:
+            case Operations.PUSH: // push в стэк с учетом суммы
                 this.res.push(Number(value));
                 this.sum += Number(value);
                 break;
-            case Operations.POP:
+            case Operations.POP: // pop из стэка с учетом суммы
                 this.sum -= Number(this.res.pop());
                 break;
-            case Operations.MIN:
-                this.callbackQueue.push(() => console.log(this.res.min()));
+            case Operations.MIN: // минимальное число в стэке с записью в очередь запросов
+                const min = this.res.min();
+                this.callbackQueue.push(() => console.log(min));
                 break;
-            case Operations.MAX:
-                this.callbackQueue.push(() => console.log(this.res.max()));
+            case Operations.MAX: // максимальное число в стэке с записью в очередь запросов
+                const max = this.res.max();
+                this.callbackQueue.push(() => console.log(max));
                 break;
-            case Operations.AVG:
+            case Operations.AVG:  // среднее число в стэке с записью в очередь запросов, сложность O(N)
                 this.callbackQueue.push(() =>
                     console.log(this.sum / this.res.value.length)
                 );
                 break;
-            case Operations.REMOVE:
+            case Operations.REMOVE: // удаления числа из стэка
                 this.res.remove(Number(value));
                 break;
             default:
@@ -63,9 +72,11 @@ class Task {
         }
     }
 
+    // инициализация задачи
+
     init() {
         readlineInterface.question("", (length: string) => {
-            this.resCountCommands = parseInt(length);
+            this.resCountCommands = parseInt(length); // чтение количества команд
 
             if (isNaN(this.resCountCommands) || this.resCountCommands <= 0) {
                 console.log(
@@ -75,7 +86,7 @@ class Task {
                 return;
             }
 
-            this.readElement();
+            this.readElement(); // вызов рекурсии
         });
     }
 }

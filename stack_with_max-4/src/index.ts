@@ -1,3 +1,3 @@
 import Task from "./lib/Task";
 
-new Task();
+new Task(); // инициализация задачи

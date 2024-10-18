@@ -1,38 +1,50 @@
 import { IStack } from "../interfaces/interfaces";
 
+// Класс стэка для работы с массивами дженерного типа
+
 class Stack<T> implements IStack<T> {
-    public value: T[];
-    private isNumberArrayFlag: boolean;
+    public value: T[]; // значение стэка
+    private isNumberStackFlag: boolean; // флаг того, является ли стэк числовым
 
     constructor(arr: T[]) {
-        this.value = arr;
-        this.isNumberArrayFlag = true;
+        this.value = arr; // создание массива
+        this.isNumberStackFlag = true; // флаг того, стэк ли массив числовым
         this.value.forEach(
-            item => (this.isNumberArrayFlag &&= typeof item === "number")
+            item => (this.isNumberStackFlag &&= typeof item === "number") // проверка на числовой стэк
         );
     }
 
-    push(item: T) {
+    // push в стэк
+
+    public push(item: T) {
         this.value.push(item);
     }
 
-    pop() {
+    // pop из стэка
+
+    public pop() {
         return this.value.pop();
     }
 
-    max() {
-        return this.isNumberArrayFlag
-            ? Math.max.apply(null, this.value as number[])
+    // максимальное значение стэка
+
+    public max() {
+        return this.isNumberStackFlag
+            ? Math.max(...(this.value as number[]))
             : undefined;
     }
 
-    min() {
-        return this.isNumberArrayFlag
-            ? Math.min.apply(null, this.value as number[])
+    // минимальное значение стэка
+
+    public min() {
+        return this.isNumberStackFlag
+            ? Math.min(...(this.value as number[]))
             : undefined;
     }
 
-    remove(item: T) {
+    // удаление значения из массива по value
+
+    public remove(item: T) {
         const index = this.value.indexOf(item);
         if (index !== -1) {
             this.value.splice(index, 1);

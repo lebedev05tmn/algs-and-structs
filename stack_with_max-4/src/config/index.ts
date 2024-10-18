@@ -1,3 +1,5 @@
+// enum с операциями
+
 export enum Operations {
     MAX = "max",
     MIN = "min",

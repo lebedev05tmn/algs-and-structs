@@ -3,7 +3,7 @@ import { readlineInterface } from "../utils/readline";
 import Stack from "./Stack";
 
 class Task {
-    private res: Stack<number, number>;
+    private res: Stack<number>;
     private resCountCommands: number;
     private sum: number;
     private callbackQueue: (() => void)[];
@@ -11,7 +11,7 @@ class Task {
 
     constructor() {
         this.init();
-        this.res = new Stack([]);
+        this.res = new Stack<number>([]);
         this.resCountCommands = 0;
         this.sum = 0;
         this.callbackQueue = [];
@@ -26,14 +26,16 @@ class Task {
                 this.readElement();
             });
         } else {
-            this.callbackQueue.forEach(cb => cb());
+            while (this.callbackQueue.length > 0) {
+                (this.callbackQueue.shift() as () => void)();
+            }
             readlineInterface.close();
         }
     }
 
     parse(command: string) {
         const [operation, value] = command.split(" ");
-        
+
         switch (operation) {
             case Operations.PUSH:
                 this.res.push(Number(value));

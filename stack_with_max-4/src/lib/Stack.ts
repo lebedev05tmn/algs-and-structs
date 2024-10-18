@@ -1,10 +1,10 @@
 import { IStack } from "../interfaces/interfaces";
 
-class Stack<T, U> implements IStack<T, U> {
-    public value: (T & U)[];
+class Stack<T> implements IStack<T> {
+    public value: T[];
     private isNumberArrayFlag: boolean;
 
-    constructor(arr: (T & U)[]) {
+    constructor(arr: T[]) {
         this.value = arr;
         this.isNumberArrayFlag = true;
         this.value.forEach(
@@ -12,7 +12,7 @@ class Stack<T, U> implements IStack<T, U> {
         );
     }
 
-    push(item: T & U) {
+    push(item: T) {
         this.value.push(item);
     }
 
@@ -32,7 +32,7 @@ class Stack<T, U> implements IStack<T, U> {
             : undefined;
     }
 
-    remove(item: T & U) {
+    remove(item: T) {
         const index = this.value.indexOf(item);
         if (index !== -1) {
             this.value.splice(index, 1);

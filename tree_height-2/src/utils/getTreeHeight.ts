@@ -1,24 +1,26 @@
 const getTreeHeight = (length: number, parents: number[]): number => {
-    // Массив для хранения высоты каждого узла
+    // Массив высот каждого узла
     const height = new Array(length).fill(-1);
 
     // Функция для вычисления высоты узла
     function getHeight(node: number) {
-        // Если высота уже вычислена, возвращаем её
+        // высота уже вычислена
         if (height[node] !== -1) {
             return height[node];
         }
 
-        // Если узел - корень (родитель = -1), высота = 1
+        // Узел - корень (родитель = -1), высота = 1
         if (parents[node] === -1) {
             height[node] = 1;
         } else {
-            // Рекурсивно вычисляем высоту родителя и добавляем 1
+            // Идем в глубину
             height[node] = getHeight(parents[node]) + 1;
         }
 
         return height[node];
     }
+
+    // Максимальная высота дерева
 
     return Array.from({ length: length }, (_, index) =>
         getHeight(index)

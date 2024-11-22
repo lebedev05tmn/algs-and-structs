@@ -12,22 +12,19 @@ class Book implements IBook {
     // матчер дубликата по имени
 
     public duplicateNameMatcher(findName: string): boolean {
-        const flag = Array.from(this.value, ([_, name]) => name).reduce(
-            (acc, item) => {
-                acc &&= item !== findName;
-                return acc;
-            },
-            true
-        );
+        const flag = Array.from(this.value)
+            .map(([key]) => key)
+            .includes(findName);
 
-        return !flag;
+        return flag;
     }
 
     // добавить контакт
 
     public add(contact: TContact): void {
-        if (!this.duplicateNameMatcher(contact.name))
+        if (!this.duplicateNameMatcher(contact.name)) {
             this.value.set(contact.phone, contact.name);
+        }
     }
 
     // удалить контакт
